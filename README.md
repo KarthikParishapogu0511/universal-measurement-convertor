@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Universal Conversion Calculator
 
 A comprehensive Java application that performs various types of unit conversions including currency, length, weight, time, and temperature.
