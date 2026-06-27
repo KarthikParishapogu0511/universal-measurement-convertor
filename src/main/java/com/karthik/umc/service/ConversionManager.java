@@ -1,5 +1,12 @@
+package com.karthik.umc.service;
+import com.karthik.umc.service.converter.LengthConverter;
+import com.karthik.umc.service.converter.WeightConverter;
+
 public class ConversionManager {
-    
+
+    private final LengthConverter lengthConverter = new LengthConverter();
+    private final WeightConverter weightConverter = new WeightConverter();
+
     // Currency conversion rates (as of recent data - these would ideally be fetched from an API)
     private static final double[][] CURRENCY_RATES = {
         // INR, USD, EUR, GBP, JPY, CAD, AUD, CHF
@@ -28,85 +35,14 @@ public class ConversionManager {
     }
     
     public double convertLength(double length, int fromUnit, int toUnit) {
-        if (fromUnit < 1 || fromUnit > 8 || toUnit < 1 || toUnit > 8) {
-            throw new IllegalArgumentException("Invalid length unit selection");
-        }
-        
-        // Convert to meters first
-        double meters = toMeters(length, fromUnit);
-        
-        // Convert from meters to target unit
-        return fromMeters(meters, toUnit);
+        return lengthConverter.convert(length, fromUnit, toUnit);
     }
-    
-    private double toMeters(double value, int unit) {
-        switch (unit) {
-            case 1: return value / 1000.0; // mm to m
-            case 2: return value / 100.0;  // cm to m
-            case 3: return value;          // m to m
-            case 4: return value * 1000.0; // km to m
-            case 5: return value * 0.0254; // inches to m
-            case 6: return value * 0.3048; // feet to m
-            case 7: return value * 0.9144; // yards to m
-            case 8: return value * 1609.344; // miles to m
-            default: throw new IllegalArgumentException("Invalid length unit");
-        }
-    }
-    
-    private double fromMeters(double meters, int unit) {
-        switch (unit) {
-            case 1: return meters * 1000.0; // m to mm
-            case 2: return meters * 100.0;  // m to cm
-            case 3: return meters;          // m to m
-            case 4: return meters / 1000.0; // m to km
-            case 5: return meters / 0.0254; // m to inches
-            case 6: return meters / 0.3048; // m to feet
-            case 7: return meters / 0.9144; // m to yards
-            case 8: return meters / 1609.344; // m to miles
-            default: throw new IllegalArgumentException("Invalid length unit");
-        }
-    }
-    
+
     public double convertWeight(double weight, int fromUnit, int toUnit) {
-        if (fromUnit < 1 || fromUnit > 8 || toUnit < 1 || toUnit > 8) {
-            throw new IllegalArgumentException("Invalid weight unit selection");
-        }
-        
-        // Convert to kilograms first
-        double kilograms = toKilograms(weight, fromUnit);
-        
-        // Convert from kilograms to target unit
-        return fromKilograms(kilograms, toUnit);
+        return weightConverter.convert(weight, fromUnit, toUnit);
     }
     
-    private double toKilograms(double value, int unit) {
-        switch (unit) {
-            case 1: return value / 1000000.0; // mg to kg
-            case 2: return value / 1000.0;    // g to kg
-            case 3: return value;             // kg to kg
-            case 4: return value * 1000.0;    // metric ton to kg
-            case 5: return value * 0.0283495; // oz to kg
-            case 6: return value * 0.453592;  // lb to kg
-            case 7: return value * 6.35029;   // stone to kg
-            case 8: return value * 907.185;   // US ton to kg
-            default: throw new IllegalArgumentException("Invalid weight unit");
-        }
-    }
-    
-    private double fromKilograms(double kilograms, int unit) {
-        switch (unit) {
-            case 1: return kilograms * 1000000.0; // kg to mg
-            case 2: return kilograms * 1000.0;    // kg to g
-            case 3: return kilograms;             // kg to kg
-            case 4: return kilograms / 1000.0;    // kg to metric ton
-            case 5: return kilograms / 0.0283495; // kg to oz
-            case 6: return kilograms / 0.453592;  // kg to lb
-            case 7: return kilograms / 6.35029;   // kg to stone
-            case 8: return kilograms / 907.185;   // kg to US ton
-            default: throw new IllegalArgumentException("Invalid weight unit");
-        }
-    }
-    
+
     public double convertTime(double time, int fromUnit, int toUnit) {
         if (fromUnit < 1 || fromUnit > 7 || toUnit < 1 || toUnit > 7) {
             throw new IllegalArgumentException("Invalid time unit selection");
